@@ -13,5 +13,6 @@ use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class EBPResourceCentrePage extends CommonActions {
     protected $path = '/ebp-resource-center';
-    public $EBPBanner = './/span[@id="banneer"]/img';
+    public $EBPBanner = './/span[@id="banner"]/img';
+    public $EBPTitle = './/';
 }

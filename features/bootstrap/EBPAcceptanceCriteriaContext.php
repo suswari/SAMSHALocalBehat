@@ -6,28 +6,34 @@
  * Time: 2:16 PM
  */
 use Behat\Behat\Context\Context;
-use Behat\Mink\Session;
-use Behat\MinkExtension\Context\MinkContext;
+
 use Page\EBPResourceCentrePage;
 use Page\ProgramAndCampaignsPage;
 use Page\SAMSHAHomePage;
-use SensioLabs\Behat\PageObjectExtension\PageObject\Factory;
-use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 
-class EBPAcceptanceCriteriaContext extends Page implements Context
+
+class EBPAcceptanceCriteriaContext implements Context
 {
     public $HomePage;
     public $ProgramsCampaignsPage;
-    public $EBPAcceptanceCriteriaPage;
+    public $EBPResourceCenterPage;
 
 
-    public function __construct(SAMSHAHomePage $HomePage, ProgramAndCampaignsPage $ProgramsCampaignsPage, EBPResourceCentrePage $EBPAcceptanceCriteriaPage)
+    public function __construct(SAMSHAHomePage $HomePage, ProgramAndCampaignsPage $ProgramsCampaignsPage, EBPResourceCentrePage $EBPResourceCenterPage)
     {
         $this->HomePage = $HomePage;
         $this->ProgramsCampaignsPage = $ProgramsCampaignsPage;
-        $this->EBPAcceptanceCriteriaPage = $EBPAcceptanceCriteriaPage;
+        $this->EBPResourceCenterPage = $EBPResourceCenterPage;
 
+    }
+
+    /**
+     * @When /^The user access SAMHSA homesite$/
+     */
+    public function accessSAMHSAHomeSite()
+    {
+            $this->HomePage->OpenHomePage();
     }
 
     /**
@@ -35,15 +41,55 @@ class EBPAcceptanceCriteriaContext extends Page implements Context
      */
     public function navigateFromProgramsAndCampaigns($linkName)
     {
-        $this->HomePage->ClickProgramsAndCampaignsLink();
-        $this->ProgramsCampaignsPage->ClickProgram($linkName);
+            $this->HomePage->ClickProgramsAndCampaignsLink();
+            $this->ProgramsCampaignsPage->ClickProgram($linkName);
     }
 
     /**
-     * @Then /^EBP banner is visible at the top of the page$/
+     * @Then /^The user sees the EBP banner at the top of the page$/
      */
     public function EBPBannerVisibility()
     {
-        $this->EBPAcceptanceCriteriaPage->isVisible($this->EBPAcceptanceCriteriaPage->EBPBanner);
+        $this->EBPResourceCenterPage->isVisible($this->EBPResourceCenterPage->EBPBanner);
+    }
+
+    /**
+     * @Then /^The user sees the title “Evidence-Based Practices Resources Center” is visible$/
+     */
+    public function EBPTitleVisibility()
+    {
+        $this->EBPResourceCenterPage->isVisible($this->EBPResourceCenterPage->EBPTitle);
+    }
+
+    /**
+     * @Then /^The user sees the EBP welcome statement below the title$/
+     */
+    public function EBPWelcomeStatementVisibility()
+    {
+        $this->EBPResourceCenterPage->isVisible($this->EBPResourceCenterPage->EBPWelcomeStatement);
+    }
+
+    /**
+     * @Then /^The user sees the sub heading “Filter Resources”$/
+     */
+    public function filterResourcesSubVisibility()
+    {
+        $this->EBPResourceCenterPage->isVisible($this->EBPResourceCenterPage->filterResourcesSubHeading);
+    }
+
+    /**
+     * @Then /^The user sees that all the EBP related document resources are listed below the filter section$/
+     */
+    public function EBPRelatedDocumentsBlockVisibility()
+    {
+        $this->EBPResourceCenterPage->isVisible($this->EBPResourceCenterPage->EBPRelatedDocumentsBlock);
+    }
+
+    /**
+     * @Then /^The user sees the EBP “Technical Assistance” section to the right side of the page$/
+     */
+    public function EBPTechnicalAssistanceBlockVisibility()
+    {
+        $this->EBPResourceCenterPage->isVisible($this->EBPResourceCenterPage->EBPTechnicalAssistanceBlock);
     }
 }
