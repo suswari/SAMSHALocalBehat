@@ -9,15 +9,10 @@
 namespace Page;
 
 use Behat\Mink\Session;
-use Exception;
 use SensioLabs\Behat\PageObjectExtension\PageObject\Factory;
-use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
 
 class SAMSHAHomePage extends CommonActions {
     protected $path = '/';
-
-
-
     public function __construct(Session $session, Factory $factory, array $parameters = array())
     {
         parent::__construct($session, $factory, $parameters);
@@ -29,6 +24,7 @@ class SAMSHAHomePage extends CommonActions {
     //##############################################################################
 
     public $programsAndCampaingsLink = ".//a[text()='Programs & Campaigns']";
+    public $SAMHSAHeaderLogoPresent = ".//img[@id='top-logo']";
 
 
     //##############################################################################
@@ -41,7 +37,7 @@ class SAMSHAHomePage extends CommonActions {
     }
 
     public function OpenHomePage(){
-            $this->OpenPage('/');
+            $this->openPage('/');
     }
 
 }

@@ -12,7 +12,7 @@ default:
   extensions:
     Behat\MinkExtension:
       files_path: "%paths.base%/features"
-      base_url: https://stage-web-external-elb-14033944.us-gov-west-1.elb.amazonaws.com/
+      base_url: https://stage-web-external-elb-14033944.us-gov-west-1.elb.amazonaws.com
 #      base_url: https://www.samhsa.gov
 
       default_session: selenium2
@@ -21,6 +21,14 @@ default:
         wd_host: 'http://localhost:4444/wd/hub'
         browser: chrome
         capabilities:
+          chrome:
+            switches:
+#              - "--headless"
+#              - "no-sandbox"
+#              - "--disable-gpu"
+#              - "--window-size=800,600"
+          firefox:
+
 
     SensioLabs\Behat\PageObjectExtension: ~
 

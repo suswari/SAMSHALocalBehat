@@ -8,5 +8,8 @@
         "phpunit/phpunit": "^5.7",
         "emuse/behat-html-formatter": "^0.1.0",
         "sensiolabs/behat-page-object-extension": "^2.0"
+    },
+    "require": {
+        "knplabs/gaufrette": "^0.6.0"
     }
 }

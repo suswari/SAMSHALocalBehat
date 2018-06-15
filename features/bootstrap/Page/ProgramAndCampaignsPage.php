@@ -9,17 +9,13 @@
 
 namespace Page;
 
-use Behat\Mink\Session;
-use SensioLabs\Behat\PageObjectExtension\PageObject\Factory;
-use SensioLabs\Behat\PageObjectExtension\PageObject\Page;
-
 class ProgramAndCampaignsPage extends CommonActions {
     protected $path = '/programs-campaigns';
-    public function __construct(Session $session, Factory $factory, array $parameters = array())
-    {
-        parent::__construct($session, $factory, $parameters);
-        $this->setPageTimeOut();
-    }
+//    public function __construct(Session $session, Factory $factory, array $parameters = array())
+//    {
+//        parent::__construct($session, $factory, $parameters);
+//        $this->setPageTimeOut();
+//    }
 
     //##############################################################################
     //#######################      Page elements Xpath      ########################
