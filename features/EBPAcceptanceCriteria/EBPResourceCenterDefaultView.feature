@@ -1,4 +1,3 @@
-@EBP
 Feature: Evidence-Based Practices Resource Center Display content
   In order to verify the presence of content of the EBP Resource Page
   As a regular user
@@ -50,7 +49,7 @@ Feature: Evidence-Based Practices Resource Center Display content
   Scenario: View the resource descriptions and tags for each resource listing
     Given The user is on the "EBP Resource Center page"
     Then From the list of EBP resources the user sees the resource title come links
-    And The records are sorted by title in ascending order by default
+    And The resource records are sorted by title in ascending order by default
     And The total number of resources listed per page is 15
     And The user sees the resource description
     And The user always sees the following resource tags
