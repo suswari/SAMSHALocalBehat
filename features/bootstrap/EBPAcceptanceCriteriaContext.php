@@ -11,6 +11,7 @@ use Page\EBPResourceCentrePage;
 use Page\EBPResourceCenterAboutPage;
 use Page\ProgramAndCampaignsPage;
 use Page\SAMSHAHomePage;
+use Page\CommonPageElements;
 
 //require_once 'PHPUnit/Framework/Assert/Functions.php';
 
@@ -20,14 +21,16 @@ class EBPAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase implements
     public $ProgramsCampaignsPage;
     public $EBPResourceCenterPage;
     public $EBPAboutPage;
+    public $CommonPageElements;
 
 
-    public function __construct(SAMSHAHomePage $HomePage, ProgramAndCampaignsPage $ProgramsCampaignsPage, EBPResourceCentrePage $EBPResourceCenterPage,EBPResourceCenterAboutPage $EBPResourceCenterAboutPage)
+    public function __construct(SAMSHAHomePage $HomePage, ProgramAndCampaignsPage $ProgramsCampaignsPage, EBPResourceCentrePage $EBPResourceCenterPage,EBPResourceCenterAboutPage $EBPResourceCenterAboutPage,CommonPageElements $CommonPageElements)
     {
         $this->HomePage = $HomePage;
         $this->ProgramsCampaignsPage = $ProgramsCampaignsPage;
         $this->EBPResourceCenterPage = $EBPResourceCenterPage;
         $this->EBPAboutPage = $EBPResourceCenterAboutPage;
+        $this->CommonPageElements = $CommonPageElements;
 
     }
 
@@ -146,23 +149,23 @@ class EBPAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase implements
 
     /**
      * @Given /^From the list of EBP resources the user sees the resource title come links$/
-     * @Then /^The total number of resources listed per page is 15$/
+     * @Then /^The total number of resources listed per page is (?P<count>(?:[^"]|\\")*)$/
      */
-    public function EBPResourcesTitleLinksVisible()
+    public function EBPResourcesTitleLinksVisible($count = 15)
     {
-        $count = $this->EBPResourceCenterPage->GetResourcesLinksCount();
-        $this->assertEquals($count, 15, 'There are not all resource link titles');
+        $actualcount = $this->EBPResourceCenterPage->GetResourcesLinksCount();
+        $this->assertEquals($count, $actualcount, 'There are not all resource link titles');
     }
 
     /**
-     * @Given /^The records are sorted by title in ascending order by default$/
+     * @Given /^The resource records are sorted by title in ascending order by default$/
      */
     public function EBPResourcesTitleAreSorted()
     {
         $actualLinkTexts = $this->EBPResourceCenterPage->GetAllResourcesLinkText();
         $expectedLinkTexts = $actualLinkTexts;
         sort($expectedLinkTexts);
-        $this->assertEquals($expectedLinkTexts, $expectedLinkTexts, 'The resource titles are not sorted by default');
+        $this->assertEquals($expectedLinkTexts, $expectedLinkTexts, 'The resource titles are not sorted in ascending order by default');
     }
 
     /**
@@ -302,4 +305,26 @@ class EBPAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase implements
         $this->EBPAboutPage->click($this->EBPAboutPage->LetPaneNavigationBlock.'//a[text()="'.$linkname.'"]');
 
     }
+
+    /**
+     * @Given /^The user expands on the "(?P<filtername>(?:[^"]|\\")*)" filter from the EBP filter section$/
+     */
+    public function ExpandEBPFilterSection($filtername)
+    {
+        var_export($this->CommonPageElements->DropdownField($filtername));
+        $this->EBPResourceCenterPage->click($this->CommonPageElements->DropdownField($filtername));
+    }
+
+
+    /**
+     * @Given /^The user sees the resource list is sorted by title in the descending order of alphabets$/
+     */
+    public function EBPResourcesTitleAreSortedDescending()
+    {
+        $actualLinkTexts = $this->EBPResourceCenterPage->GetAllResourcesLinkText();
+        $expectedLinkTexts = $actualLinkTexts;
+        rsort($expectedLinkTexts);
+        $this->assertEquals($expectedLinkTexts, $actualLinkTexts, 'The resource titles are not sorted in descending order');
+    }
+
 }

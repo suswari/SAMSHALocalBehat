@@ -93,4 +93,21 @@ class CommonActions extends Page {
         }
         return $selectedText;
     }
+
+    public function selectDropdownOptionByText($locator,$option){
+        try{
+            $this->find('xpath',$locator)->selectOption($option);
+        }
+        catch (\WebDriver\Exception\Timeout $e){
+        }
+    }
+
+
+    public function type($locator,$text){
+        try{
+            $this->find('xpath',$locator)->setValue($text);
+        }
+        catch (\WebDriver\Exception\Timeout $e){
+        }
+    }
 }

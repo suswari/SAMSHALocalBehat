@@ -7,7 +7,8 @@
         "enm1989/geckodriver": "^0.20.0",
         "phpunit/phpunit": "^5.7",
         "emuse/behat-html-formatter": "^0.1.0",
-        "sensiolabs/behat-page-object-extension": "^2.0"
+        "sensiolabs/behat-page-object-extension": "^2.0",
+        "bex/behat-screenshot": "^1.2"
     },
     "require": {
         "knplabs/gaufrette": "^0.6.0"

@@ -1,3 +1,4 @@
+@EBP
 Feature: Evidence-Based Practices Resource Center Display content
   In order to verify the presence of content of the EBP Resource Page
   As a regular user

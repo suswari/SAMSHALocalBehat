@@ -28,6 +28,9 @@ default:
 #              - "--disable-gpu"
 #              - "--window-size=800,600"
           firefox:
+          extra_capabilities:
+            acceptSslCerts: true,
+#            acceptInsecureCerts: true,
 
 
     SensioLabs\Behat\PageObjectExtension: ~
@@ -39,3 +42,9 @@ default:
       print_args: true
       print_outp: true
       loop_break: true
+
+    Bex\Behat\ScreenshotExtension:
+          screenshot_taking_mode: failed_steps
+          image_drivers:
+            local:
+              screenshot_directory: /reports/screenshots

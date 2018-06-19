@@ -43,10 +43,34 @@ class CommonPageElements extends CommonActions {
     public $SAMHSAFooter = './/div[@class="l-region l-region--footer"]';
     public $SAMHSABottomFooter = './/div[@class="l-region l-region--bottom-footer"]';
 
+    public function DropdownLabels($labelname){
+        return './/label[normalize-space(text())="'.$labelname.'"]';
+    }
+
+    public function DropdownField($labelname){
+        if($this->find('xpath','.//label[(normalize-space(text())="'.$labelname.'")]/following-sibling::*//select')){
+            return './/label[(normalize-space(text())="'.$labelname.'")]/following-sibling::*//select';
+        }else{
+            return './/label[(normalize-space(text())="'.$labelname.'")]/following-sibling::select';
+        }
+    }
+    public function DropdownOptions($labelname){
+        if($this->find('xpath','.//label[(normalize-space(text())="'.$labelname.'")]/following-sibling::*//select')){
+            return './/label[(normalize-space(text())="'.$labelname.'")]/following-sibling::*//select/option';
+        }else{
+            return './/label[(normalize-space(text())="'.$labelname.'")]/following-sibling::select/option';
+        }
+
+    }
+
+
+    public $ApplyButton = './/input[@value="Apply"]';
+
 
     //##############################################################################
     //#######################      Page methods             ########################
     //##############################################################################
+
 
 
 

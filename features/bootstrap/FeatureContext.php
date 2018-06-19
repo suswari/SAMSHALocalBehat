@@ -75,17 +75,18 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
             if (!file_exists('reports/screenshots/' . $featureFolder)) {
                 mkdir('reports/screenshots/' . $featureFolder);
             }
-            $driver = $this->getSession()->getDriver();
+//            $driver = $this->getSession()->getDriver();
+//            $driver = $this->getDgetDriver();
 
             //take screenshot and save as the previously defined filename
 //            $this->driver->takeScreenshot('results/html/assets/screenshots/' . $featureFolder . '/' . $fileName);
             // For Selenium2 Driver you can use:
-            try {
-                $screenshot = $driver->getScreenshot();
-            } catch (UnsupportedDriverActionException $e) {
-            } catch (DriverException $e) {
-            }
-            file_put_contents('reports/tmp/test.png', base64_decode($screenshot));
+//            try {
+//                $screenshot = $driver->getScreenshot();
+//            } catch (UnsupportedDriverActionException $e) {
+//            } catch (DriverException $e) {
+//            }
+//            file_put_contents('reports/tmp/test.png', base64_decode($screenshot));
         }
     }
 
@@ -147,6 +148,16 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
     {
         $visible = $this->HomePage->isVisible('.//*[text()="'.$markdown->getRaw().'"]');
         $this->assertEquals($visible,true,'The '.$textBetterKnownAs.' text '.$markdown->getRaw().' is not visible');
+    }
+
+
+    /**
+     * @Given /^The user sees the following text "(?P<text>(?:[^"]|\\")*)"$/
+     */
+    public function TextVisible($text)
+    {
+        $visible = $this->HomePage->isVisible('.//*[text()="'.$text.'"]');
+        $this->assertEquals($visible,true,'The "'.$text.'" text is not visible');
     }
 
     /**
@@ -229,7 +240,6 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
      */
     public function ClickPaginationLink($linkname)
     {
-        var_export($this->CommonPageElements->PaginationLinks($linkname));
         $this->CommonPageElements->click($this->CommonPageElements->PaginationLinks($linkname));
         $this->CommonPageElements->waitForTime(3000);
     }
@@ -253,6 +263,67 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
     {
        $this->CommonPageElements->click('.//a[text()="'.$linkname.'"]');
     }
-}
 
+    /**
+     * @Given /^The "(?P<filterlabel>(?:[^"]|\\")*)" filter has the following options$/
+    $/
+     */
+    public function VerifyOptionsForDropdown($filterlabel,TableNode $table)
+    {
+        $hash = $table->getHash();
+        foreach ($hash as $row) {
+            try{
+                $optionvisible = $this->CommonPageElements->isVisible($this->CommonPageElements->DropdownOptions($filterlabel).'[(normalize-space(text())="'.$row['Options'].'"]');
+            }catch (Exception $exception){
+                 $optionvisible = $this->CommonPageElements->isVisible($this->CommonPageElements->DropdownOptions($filterlabel).'[text()="'.$row['Options'].'"]');
+            }
+            $this->assertEquals($optionvisible, true, 'could not find the following option:'.$row['Options']);
+        }
+    }
+
+    /**
+     * @Given /^The user selects the filter "(?P<filterlabel>(?:[^"]|\\")*)" as "(?P<optiontext>(?:[^"]|\\")*)"$/
+    $/
+     */
+    public function SelectFromDropdownByText($filterlabel,$optiontext)
+    {
+        $this->CommonPageElements->selectDropdownOptionByText($this->CommonPageElements->DropdownField($filterlabel),$optiontext);
+
+    }
+    /**
+     * @Given /^The user selects the following set of filter criteria for EBP resources$/
+    $/
+     */
+    public function SelectFromMutilpleDropdownsByText(TableNode $table){
+        $hash = $table->getRows();
+        $header = false;
+        $headerrow = [];
+        $datarow = [];
+
+        foreach ($hash as $row) {
+            $i = 0;
+            if(!$header){
+                $headerrow = $row;
+                $header = true;
+            }else{
+                $datarow = $row;
+            }
+            var_export($header[$i]);
+//            var_export()
+//            $this->CommonPageElements->selectDropdownOptionByText($this->CommonPageElements->DropdownField($header[$i]),$datarow[$i]);
+            $i=$i+1;
+
+        }
+    }
+    /**
+     * @Given /^The users hits apply button$/
+    $/
+     */
+    public function ClickApplyButton()
+    {
+        $this->CommonPageElements->click($this->CommonPageElements->ApplyButton);
+        $this->CommonPageElements->waitForTime(3000);
+
+    }
+}
 

@@ -11,7 +11,7 @@ namespace Page;
 
 class EBPResourceCentrePage extends CommonActions {
     protected $path = '/ebp-resource-center';
-    public $EBPBanner = './/span[@id="banneer"]/img';
+    public $EBPBanner = './/span[@id="banner"]/img';
     public $EBPTitle = './/h1[text()="Evidence-Based Practices Resource Center"]';
     public $EBPWelcomeStatement = './/div[@class="node__content"]';
     public $filterResourcesSubHeading = './/h2[text()="Resources"]';
