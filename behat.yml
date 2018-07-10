@@ -4,7 +4,7 @@ default:
       contexts:
         - FeatureContext
         - EBPAcceptanceCriteriaContext
-
+        - ISMICCAcceptanceCriteria
   formatters:
     pretty:
     html:
@@ -14,7 +14,6 @@ default:
       files_path: "%paths.base%/features"
       base_url: https://stage-web-external-elb-14033944.us-gov-west-1.elb.amazonaws.com
 #      base_url: https://www.samhsa.gov
-
       default_session: selenium2
       goutte: ~
       selenium2:
@@ -29,7 +28,6 @@ default:
 #              - "--window-size=800,600"
           firefox:
           extra_capabilities:
-            acceptSslCerts: true,
 #            acceptInsecureCerts: true,
 
 

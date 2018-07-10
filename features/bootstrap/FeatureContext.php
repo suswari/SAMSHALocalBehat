@@ -3,15 +3,11 @@
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Exception\DriverException;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
-use Behat\MinkExtension\Context\MinkContext;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
-use Page\EBPResourceCentrePage;
-use Page\ProgramAndCampaignsPage;
 use Page\CommonPageElements;
 use Page\SAMSHAHomePage;
+use Page\ProgramAndCampaignsPage;
 
 /**
  * Defines application features from the specific context.
@@ -20,9 +16,8 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
 {
 
     public $HomePage;
-    public $ProgramsCampaignsPage;
-    public $EBPResourceCenterPage;
     public $CommonPageElements;
+    public $ProgramsAndCampaignsPage;
 
     /**
      * Initializes context.
@@ -31,12 +26,12 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
      * You can also pass arbitrary arguments to the
      * context constructor through behat.yml.
      */
-    public function __construct(SAMSHAHomePage $HomePage, ProgramAndCampaignsPage $ProgramsCampaignsPage, EBPResourceCentrePage $EBPResourceCenterPage,CommonPageElements $CommonPageElements)
+    public function __construct(SAMSHAHomePage $HomePage,CommonPageElements $CommonPageElements,ProgramAndCampaignsPage $programsAndCampaignsPage)
     {
+//        SAMSHAHomePage $HomePage,CommonPageElements $CommonPageElements
         $this->HomePage = $HomePage;
-        $this->ProgramsCampaignsPage = $ProgramsCampaignsPage;
-        $this->EBPResourceCenterPage = $EBPResourceCenterPage;
         $this->CommonPageElements = $CommonPageElements;
+        $this->ProgramsAndCampaignsPage =$programsAndCampaignsPage;
     }
 
 
@@ -96,8 +91,17 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
      */
     public function SAMHSAHeaderLogoPresent()
     {
-        $visible = $this->HomePage->isVisible($this->HomePage->SAMHSAHeaderLogoPresent);
+        $visible = $this->HomePage->isVisible($this->HomePage->SAMHSAHeaderLogo);
         $this->assertEquals($visible,true,'The SAMHSA header logo is not visible');
+    }
+
+    /**
+     * @Then /^The user sees the SAMHSA header$/
+     */
+    public function SAMHSAHeaderPresent()
+    {
+        $visible = $this->HomePage->isVisible($this->HomePage->SAMHSAHeader);
+        $this->assertEquals($visible,true,'The SAMHSA header is not visible');
     }
 
     /**
@@ -109,17 +113,41 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
     }
 
     /**
+     * @Given /^The user access Mind Breeze page$/
+     */
+    public function accessMindBreezeSite()
+    {
+        $this->HomePage->openPage('/search_results');
+    }
+
+
+    /**
+     * @Given /^The user access ISMICC page/
+     */
+    public function accessISMICCSite()
+    {
+        $this->HomePage->openPage('/ismicc');
+    }
+
+
+    /**
      * @Given /^The user is on the "(?P<pagehint>(?:[^"]|\\")*)"$/
      * @Given /^The user access "(?P<pagehint>(?:[^"]|\\")*)"$/
+     * @param bool $pagehint
      */
-    public function accessPage($pagehint)
+    public function accessPage($pagehint )
     {
         if($pagehint=='EBP Resource Center page') {
             $this->HomePage->openPage('ebp-resource-center');
         }elseif ($pagehint=='EBP about page') {
             $this->HomePage->openPage('ebp-resource-center/about');
+        }elseif ($pagehint=='Programs & Campaigns page') {
+            $this->HomePage->openPage('programs-campaigns');
+        } elseif ($pagehint=='ISMICC page') {
+            $this->HomePage->openPage('ismicc');
+        }elseif ($pagehint=='Mind Breeze page') {
+            $this->HomePage->openPage('search_results');
         }
-
     }
 
     /**
@@ -128,10 +156,6 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
     public function ExpectsToBeOnPage($pagehint)
     {
         $currentUrl=$this->CommonPageElements->getCurrentUrl();
-        var_export($currentUrl);
-//        $baseUrl=$this->CommonPageElements->getBaseUrl($pagehint);
-//        var_export($baseUrl);
-
         if($pagehint == 'EBP about page'){
             $this->assertStringEndsWith('ebp-resource-center/about',$currentUrl,'');
         }elseif ($pagehint=='EBP Resource Center page') {
@@ -197,7 +221,14 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
     {
        $currenturl =  $this->HomePage->getCurrentUrl();
 //       var_export($currenturl);
-        $this->assertEquals($currenturl,$url,'');
+        if(strpos($url,'http') !== false){
+            $this->assertEquals($currenturl,$url,'');
+        }else{
+            $baseurl = $this->HomePage->getBaseUrl($url);
+//            var_export($baseurl);
+            $this->assertEquals($currenturl,$baseurl.$url,'');
+        }
+
     }
 
     /**
@@ -257,7 +288,6 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
 
     /**
      * @Given /^The user clicks the link "(?P<linkname>(?:[^"]|\\")*)"$/
-    $/
      */
     public function ClicksOnALink($linkname)
     {
@@ -266,7 +296,6 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
 
     /**
      * @Given /^The "(?P<filterlabel>(?:[^"]|\\")*)" filter has the following options$/
-    $/
      */
     public function VerifyOptionsForDropdown($filterlabel,TableNode $table)
     {
@@ -283,7 +312,6 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
 
     /**
      * @Given /^The user selects the filter "(?P<filterlabel>(?:[^"]|\\")*)" as "(?P<optiontext>(?:[^"]|\\")*)"$/
-    $/
      */
     public function SelectFromDropdownByText($filterlabel,$optiontext)
     {
@@ -291,33 +319,33 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
 
     }
     /**
-     * @Given /^The user selects the following set of filter criteria for EBP resources$/
-    $/
+     * @Given /^The user selects the following set of filter criteria for "(?P<filterlabel>(?:[^"]|\\")*)"$/
      */
     public function SelectFromMutilpleDropdownsByText(TableNode $table){
         $hash = $table->getRows();
         $header = false;
         $headerrow = [];
         $datarow = [];
-
         foreach ($hash as $row) {
-            $i = 0;
+
             if(!$header){
                 $headerrow = $row;
                 $header = true;
             }else{
                 $datarow = $row;
             }
-            var_export($header[$i]);
-//            var_export()
-//            $this->CommonPageElements->selectDropdownOptionByText($this->CommonPageElements->DropdownField($header[$i]),$datarow[$i]);
-            $i=$i+1;
+            if($datarow!=NULL){
+                for ($i = 0; $i <count($headerrow); $i++) {
+                    if($datarow[$i]!=NULL) {
+                        $this->CommonPageElements->selectDropdownOptionByText($this->CommonPageElements->DropdownField($headerrow[$i]), $datarow[$i]);
+                    }
+                }
 
+            }
         }
     }
     /**
      * @Given /^The users hits apply button$/
-    $/
      */
     public function ClickApplyButton()
     {
@@ -325,5 +353,81 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
         $this->CommonPageElements->waitForTime(3000);
 
     }
-}
 
+    /**
+     * @Given /^The user sees the following subheadings$/
+     */
+    public function VerifySubHeadingsPresent(TableNode $table)
+    {
+        $hash = $table->getHash();
+        foreach ($hash as $row) {
+            $visible = $this->CommonPageElements->isVisible('.//h2[normalize-space(text())="'.$row['subheadings'].'"]');
+            $this->assertEquals($visible, true, 'could not find the following subheading:'.$row['subheadings']);
+
+        }
+
+    }
+    /**
+     * @Given /^The user sees the subheading "(?P<titleText>(?:[^"]|\\")*)"$/
+     */
+    public function VerifySubHeadingPresent($titleText)
+    {
+            $visible = $this->CommonPageElements->isVisible('.//h2[normalize-space(text())="'.$titleText.'"]');
+            $this->assertEquals($visible, true, 'could not find the following subheading:'.$titleText);
+
+    }
+
+    /**
+     * @Given /^The user see the main title "(?P<titleText>(?:[^"]|\\")*)"$/
+     */
+    public function VerifyHeadingsPresent($titleText)
+    {
+        $visible= $this->CommonPageElements->isVisible('.//h1[normalize-space(text())="'.$titleText.'"]');
+        $this->assertEquals($visible, true, 'could not find the following heading:'.$titleText);
+
+    }
+
+
+    /**
+     * @Given /^The user sees the text "CONNECT WITH SAMHSA:" as a label for socila media icons$/
+     */
+    public function HeaderConnectWithSamhsaTextVisible(){
+        $visible = $this->CommonPageElements->isVisible($this->CommonPageElements->HeaderConnectWithSAMHSAText);
+        $this->assertEquals($visible, true, 'could not find CONNECT WITH SAMHSA: label');
+
+    }
+
+    /**
+     * @Given /^The user sees following social media icons in the header$/
+     */
+    public function HeaderSocialMediaIconsVisible(TableNode $table)
+    {
+        $hash = $table->getHash();
+        foreach ($hash as $row) {
+            $visible = $this->CommonPageElements->isVisible($this->CommonPageElements->SocialMediaIcons($row['Social Media Icons']));
+            $this->assertEquals($visible, true, 'could not find social media icon :'.$row['Social Media Icons']);
+
+        }
+    }
+
+    /**
+     * @Given /^The user sees the search button for the SAMHSA search in the header$/
+     */
+    public function SAMHSASearchBoxButtonVisible()
+    {
+        $visible =     $this->CommonPageElements->isVisible($this->CommonPageElements->SAMHSASearchButton);
+        $this->assertEquals($visible, true, 'could not find SAMHSA search button in the header');
+
+    }
+
+    /**
+     * @Given /^The user sees the SAMHSA search box in the header$/
+     */
+    public function SAMHSASearchBoxVisible()
+    {
+        $visible =   $this->CommonPageElements->isVisible($this->CommonPageElements->SAMHSASearchBox);
+        $this->assertEquals($visible, true, 'could not find SAMHSA search input field in the header');
+
+    }
+
+}

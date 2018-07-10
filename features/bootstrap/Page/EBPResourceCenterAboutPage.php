@@ -10,7 +10,15 @@
 namespace Page;
 
 
+use Behat\Mink\Session;
+use SensioLabs\Behat\PageObjectExtension\PageObject\Factory;
+
 class EBPResourceCenterAboutPage extends CommonActions {
+    public function __construct(Session $session, Factory $factory, array $parameters = array())
+    {
+        parent::__construct($session, $factory, $parameters);
+        $this->setPageTimeOut();
+    }
     protected $path = '/ebp-resource-center/about';
     public $EBPAboutTitle = './/h1[text()="About the Evidence-Based Practices Resource Center"]';
     public $EBPSummaryBlock = './/*[@class=\'field field--name-field-summary field--type-text-long field--label-hidden\']//p';

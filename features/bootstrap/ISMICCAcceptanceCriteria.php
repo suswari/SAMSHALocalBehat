@@ -1,20 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sadla
- * Date: 5/29/18
- * Time: 2:16 PM
- */
+
 use Behat\Behat\Context\Context;
-use Page\ISMICCPage;
-use Page\SAMSHAHomePage;
-use Page\CommonPageElements;
 use Behat\Gherkin\Node\TableNode;
+use Page\CommonPageElements;
+use Page\SAMSHAHomePage;
 use Page\ProgramAndCampaignsPage;
+use Page\ISMICCPage;
 
-
-
-class ISMICCAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase implements Context
+/**
+ * Defines application features from the specific context.
+ */
+class ISMICCAcceptanceCriteria extends PHPUnit_Framework_TestCase implements Context
 {
     public $HomePage;
     public $ISMICCPage;
@@ -37,12 +33,8 @@ class ISMICCAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase impleme
     public function searchProgramsAndCampaigns(TableNode $table)
     {
         $hash = $table->getHash();
-        var_export('before if 1');
-
         foreach ($hash as $row) {
-            var_export('before if');
             if($row['Keyword']){
-                var_export('in if');
                 $this->ProgramsAndCampaignsPage->type($this->ProgramsAndCampaignsPage->SearchByKeywordTextField,$row['Keyword']);
             }
             if($row['Type']){
@@ -51,7 +43,8 @@ class ISMICCAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase impleme
             if($row['Topic']){
                 $this->ProgramsAndCampaignsPage->selectDropdownOptionByText($this->ProgramsAndCampaignsPage->SearchByTopicDropdown,$row['Topic']);
             }
-
+            $this->ProgramsAndCampaignsPage->click($this->ProgramsAndCampaignsPage->SearchFindButton);
+            $this->ProgramsAndCampaignsPage->waitForTime(2000);
         }
     }
 
@@ -60,7 +53,7 @@ class ISMICCAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase impleme
      */
     public function programIconVisible($name)
     {
-         $visible =   $this->ProgramsAndCampaignsPage->isVisible($this->ProgramsAndCampaignsPage->ProgramIcon($name));
+        $visible = $this->ProgramsAndCampaignsPage->isVisible($this->ProgramsAndCampaignsPage->ProgramIcon($name));
         $this->assertEquals($visible,true,'The program icon for '.$name.' is not visible');
 
     }
@@ -82,8 +75,16 @@ class ISMICCAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase impleme
     {
         $hash = $table->getHash();
         foreach ($hash as $row) {
-            $visible = $this->CommonPageElements->isVisible('.//a[text()="'.$row['links'].'"]/../preceding-sibling::h2[1]');
-            $text = $this->CommonPageElements->getFieldText('.//a[text()="'.$row['links'].'"]/../preceding-sibling::h2[1]');
+
+            if($row['links'] == 'Get the report'){
+                $visible = $this->CommonPageElements->isVisible('.//a[text()="Get the report (PDF | 4.37 MB)"]/../preceding-sibling::h2[1]');
+                $text = $this->CommonPageElements->getFieldText('.//a[text()="Get the report (PDF | 4.37 MB)"]/../preceding-sibling::h2[1]');
+            }else{
+                $visible = $this->CommonPageElements->isVisible('.//a[text()="'.$row['links'].'"]/../preceding-sibling::h2[1]');
+                $text = $this->CommonPageElements->getFieldText('.//a[text()="'.$row['links'].'"]/../preceding-sibling::h2[1]');
+
+            }
+
             $this->assertEquals($visible,true,'The link for '.$row['links'].' is not visible');
 
             if($text !== $row['subheadings']){
@@ -98,8 +99,13 @@ class ISMICCAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase impleme
      */
     public function AccessISMICCContentAssistanceLinks($linkName)
     {
-        $this->ISMICCPage->click($this->ISMICCPage->ContentAssistanceLinks($linkName));
-        $this->ISMICCPage->waitForTime(2000);
+        if($linkName == 'Get the report'){
+            $this->ISMICCPage->click($this->ISMICCPage->ContentAssistanceLinks("Get the report (PDF | 4.37 MB)"));
+            $this->ISMICCPage->waitForTime(2000);
+        }else {
+            $this->ISMICCPage->click($this->ISMICCPage->ContentAssistanceLinks($linkName));
+            $this->ISMICCPage->waitForTime(2000);
+        }
 
     }
 

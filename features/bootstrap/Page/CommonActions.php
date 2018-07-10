@@ -19,7 +19,15 @@ class CommonActions extends Page {
 
     public function click($locator){
         try{
-            $this->find('xpath',$locator)->click();
+            $element = $this->find('xpath',$locator);
+//            while ($element == NULL){
+//                var_export('try this');
+//                $url = $this->getUrl(['/']);
+//                var_export($url);
+//                break;
+
+//            }
+            $element->click();
         }
         catch (\WebDriver\Exception\Timeout $e){
 
@@ -67,11 +75,17 @@ class CommonActions extends Page {
     }
 
     public function setPageTimeOut(){
+//        var_export($this->getSession()->getDriver());
         $this->getSession()->getDriver()->setTimeouts(['page load'=>5000]);
+//        var_export('in here');
     }
 
     public function getFieldText($locator){
-        $text = $this->find('xpath',$locator)->getText();
+        try{
+            $text = $this->find('xpath',$locator)->getText();
+        }
+        catch (\WebDriver\Exception\Timeout $e){
+        }
         return $text;
     }
 

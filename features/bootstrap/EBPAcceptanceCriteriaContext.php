@@ -327,4 +327,17 @@ class EBPAcceptanceCriteriaContext extends PHPUnit_Framework_TestCase implements
         $this->assertEquals($expectedLinkTexts, $actualLinkTexts, 'The resource titles are not sorted in descending order');
     }
 
+    /**
+     * @Given /^The user sees either results for EBP resources or the text “Sorry, we could not find any resources that matched your search. Please try again.”$/
+     */
+    public function ViewEBPResourceFilterResults()
+    {
+        $resultsvisible = $this->EBPResourceCenterPage->isVisible($this->EBPResourceCenterPage->EBPRelatedDocumentsBlock);
+        $textvisible = $this->EBPResourceCenterPage->isVisible('.//*[text()="Sorry, we could not find any resources that matched your search. Please try again."]');
+        if($resultsvisible && $textvisible){
+            $this->assertTrue(1==0, 'There results are seen along with text "Sorry, we could not find any resources that matched your search"');
+        }else if(!$resultsvisible && !$textvisible){
+            $this->assertTrue(1==0, 'There results are not seen along with text "Sorry, we could not find any resources that matched your search"');
+        }
+    }
 }
