@@ -6,9 +6,9 @@ default:
         - EBPAcceptanceCriteriaContext
         - ISMICCAcceptanceCriteriaContext
   formatters:
+    emusehtml:
+      output_path: %paths.base%/reports/
     pretty:
-    html:
-      output_path: %paths.base%/reports
   extensions:
     Behat\MinkExtension:
       files_path: "%paths.base%/features"
@@ -34,15 +34,8 @@ default:
     SensioLabs\Behat\PageObjectExtension: ~
 
     emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
-      name: html
       renderer: Twig,Behat2
       file_name: index
       print_args: true
       print_outp: true
       loop_break: true
-
-    Bex\Behat\ScreenshotExtension:
-          screenshot_taking_mode: failed_steps
-          image_drivers:
-            local:
-              screenshot_directory: /reports/screenshots
