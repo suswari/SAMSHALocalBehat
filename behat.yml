@@ -4,7 +4,7 @@ default:
       contexts:
         - FeatureContext
         - EBPAcceptanceCriteriaContext
-        - ISMICCAcceptanceCriteria
+        - ISMICCAcceptanceCriteriaContext
   formatters:
     pretty:
     html:
