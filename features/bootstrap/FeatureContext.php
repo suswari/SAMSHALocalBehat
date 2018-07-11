@@ -5,9 +5,9 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Hook\Scope\AfterStepScope;
-use Page\CommonPageElements;
-use Page\SAMSHAHomePage;
-use Page\ProgramAndCampaignsPage;
+use Pages\CommonPageElements;
+use Pages\SAMSHAHomePage;
+use Pages\ProgramAndCampaignsPage;
 
 /**
  * Defines application features from the specific context.
@@ -133,7 +133,6 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
     /**
      * @Given /^The user is on the "(?P<pagehint>(?:[^"]|\\")*)"$/
      * @Given /^The user access "(?P<pagehint>(?:[^"]|\\")*)"$/
-     * @param bool $pagehint
      */
     public function accessPage($pagehint )
     {
