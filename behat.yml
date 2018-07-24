@@ -5,8 +5,10 @@ default:
         - FeatureContext
         - EBPAcceptanceCriteriaContext
         - ISMICCAcceptanceCriteriaContext
+        - SAMHSAGrantAwardsByStateContext
+
   formatters:
-    emusehtml:
+    html:
       output_path: %paths.base%/reports/
     pretty:
   extensions:
@@ -34,8 +36,10 @@ default:
     SensioLabs\Behat\PageObjectExtension: ~
 
     emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
+      name: html
       renderer: Twig,Behat2
       file_name: index
       print_args: true
       print_outp: true
       loop_break: true
+
