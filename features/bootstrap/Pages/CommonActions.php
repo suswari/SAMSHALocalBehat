@@ -16,7 +16,6 @@ use Behat\Mink\Exception\DriverException;
 
 class CommonActions extends Page {
 
-//    protected $path = '';
 
     public function click($locator){
         try{

@@ -55,15 +55,12 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
      */
     public function afterStep($scope)
     {
-        //if test has failed, and is not an api test, get screenshot
-        //if(!$scope->getTestResult()->isPassed())
-        //{
             $featureFolder = preg_replace('/\W/', '', $scope->getFeature()->getTitle());
 
             $scenarioName = $this->currentScenario->getTitle();
             $fileName = preg_replace('/\W/', '', $scenarioName) . '.png';
 
-            if (!file_exists('reports/screenshots/' . $featureFolder)) {
+        if (!file_exists('reports/screenshots/' . $featureFolder)) {
             mkdir('reports/screenshots/' . $featureFolder, 0777, true);
             fopen('reports/screenshots/' . $featureFolder.'/'.$fileName, "w");
 
@@ -121,7 +118,7 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
      * @Given /^The user is on the "(?P<pagehint>(?:[^"]|\\")*)"$/
      * @Given /^The user access "(?P<pagehint>(?:[^"]|\\")*)"$/
      */
-    public function accessPage($pagehint )
+    public function accessPage($pagehint)
     {
         if($pagehint=='EBP Resource Center page') {
             $this->HomePage->openPage('ebp-resource-center');
@@ -136,6 +133,7 @@ class FeatureContext extends PHPUnit_Framework_TestCase implements Context
         }elseif ($pagehint=='Grant awards by state page') {
             $this->HomePage->openPage('grants-awards-by-state');
         }
+
     }
 
     /**
