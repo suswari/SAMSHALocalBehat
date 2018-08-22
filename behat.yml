@@ -5,9 +5,11 @@ default:
         - FeatureContext
         - EBPAcceptanceCriteriaContext
         - ISMICCAcceptanceCriteriaContext
-        - SAMHSAGrantAwardsByStateContext
+        - SAMHSAGrantAwardsContext
+        - SAMHSAHomeContext
 
   formatters:
+    cucumber_json:
     html:
       output_path: %paths.base%/reports/
     pretty:
@@ -28,7 +30,7 @@ default:
 #              - "no-sandbox"
 #              - "--disable-gpu"
 #              - "--window-size=800,600"
-          firefox:
+#          firefox:
           extra_capabilities:
 #            acceptInsecureCerts: true,
 
@@ -38,8 +40,11 @@ default:
     emuse\BehatHTMLFormatter\BehatHTMLFormatterExtension:
       name: html
       renderer: Twig,Behat2
-      file_name: index
+      file_name: TestReport
       print_args: true
       print_outp: true
       loop_break: true
 
+    Vanare\BehatCucumberJsonFormatter\Extension:
+      filename: report.json
+      outputDir: %paths.base%/reports
